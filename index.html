@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -19,7 +20,7 @@
 <div class="layout">
 
 ```
-<!-- Sidebar -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
@@ -27,7 +28,7 @@
 
         <div class="cash-logo">$</div>
 
-        <div class="brand-text">
+        <div>
 
             <h2>Advocate Workflow</h2>
 
@@ -55,22 +56,24 @@
 
 </aside>
 
-<!-- Main -->
+<!-- MAIN -->
 
 <main class="content">
 
-    <!-- Intake -->
+    <!-- WORKFLOW INTAKE -->
 
     <section class="card intake">
 
         <h3>Workflow Intake</h3>
 
         <label>LOB</label>
+
         <select id="lobSelect">
             <option>Cash App</option>
         </select>
 
         <label>Channel</label>
+
         <select id="channelSelect">
             <option>Voice</option>
             <option>Messaging</option>
@@ -78,12 +81,15 @@
         </select>
 
         <label>Category</label>
+
         <select id="categorySelect"></select>
 
         <label>Scenario</label>
+
         <select id="scenarioSelect"></select>
 
         <label>Sub Scenario</label>
+
         <select id="subScenarioSelect"></select>
 
         <button id="loadWorkflowBtn">
@@ -118,41 +124,81 @@
 
     </section>
 
-    <!-- Workflow -->
+    <!-- WORKFLOW CENTER -->
 
     <section class="card workflow">
 
         <div class="workflow-header">
 
             <h2 id="workflowTitle">
+
                 Select Workflow
+
             </h2>
 
             <span id="workflowBadge">
+
                 Ready
+
             </span>
 
         </div>
 
-        <div id="workflowQuestion"
-             class="question-box">
+        <div
+            id="workflowQuestion"
+            class="question-box">
 
-             Select workflow to begin
+            Select workflow to begin
 
         </div>
 
-        <div id="workflowChoices"
-             class="choices"></div>
+        <div
+            id="workflowChoices"
+            class="choices">
+
+        </div>
+
+        <div class="script-box">
+
+            <h3>
+
+                Advocate Script Guidance
+
+            </h3>
+
+            <div id="scriptContent">
+
+                Select workflow to begin.
+
+            </div>
+
+        </div>
+
+        <div class="workflow-footer">
+
+            <button
+                id="resetWorkflowBtn"
+                class="reset-btn">
+
+                Reset Workflow
+
+            </button>
+
+        </div>
 
     </section>
 
-    <!-- Resources -->
+    <!-- RESOURCES -->
 
     <section class="card resources">
 
         <div class="resource-box">
 
-            <h3>Recommended Actions</h3>
+            <h3>
+
+                Recommended Actions
+
+            </h3>
 
             <div id="recommendedActions">
 
@@ -164,7 +210,11 @@
 
         <div class="resource-box">
 
-            <h3>Knowledge Articles</h3>
+            <h3>
+
+                Knowledge Articles
+
+            </h3>
 
             <div id="kaReferences">
 
@@ -176,7 +226,11 @@
 
         <div class="resource-box">
 
-            <h3>QT References</h3>
+            <h3>
+
+                QT References
+
+            </h3>
 
             <div id="qtReferences">
 
@@ -192,26 +246,6 @@
 ```
 
 </div>
-
-<!-- Script Panel -->
-
-<section class="script-panel">
-
-```
-<div class="script-header">
-
-    <h3>Advocate Script Guidance</h3>
-
-</div>
-
-<div id="scriptContent">
-
-    Select workflow to begin.
-
-</div>
-```
-
-</section>
 
 <script src="js/workflow-data.js"></script>
 
