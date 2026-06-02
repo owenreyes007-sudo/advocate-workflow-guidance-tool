@@ -1,176 +1,195 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advocate Workflow Guidance Tool</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/styles.css">
+<title>Advocate Workflow Guidance Tool</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-<div class="app-container">
+<div class="layout">
 
-    <!-- Sidebar -->
+```
+<!-- Sidebar -->
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <div class="brand">
+    <div class="brand">
 
-            <div class="cash-icon">$</div>
+        <div class="cash-logo">$</div>
 
-            <div>
-                <h2>Advocate</h2>
-                <span>Workflow Guidance Tool</span>
+        <div class="brand-text">
+
+            <h2>Advocate Workflow</h2>
+
+            <span>Guidance Tool</span>
+
+        </div>
+
+    </div>
+
+    <div class="menu">
+
+        <div class="menu-item active">
+            Workflow Guide
+        </div>
+
+        <div class="menu-item">
+            Knowledge Base
+        </div>
+
+        <div class="menu-item">
+            Reports
+        </div>
+
+    </div>
+
+</aside>
+
+<!-- Main -->
+
+<main class="content">
+
+    <!-- Intake -->
+
+    <section class="card intake">
+
+        <h3>Workflow Intake</h3>
+
+        <label>LOB</label>
+        <select id="lobSelect">
+            <option>Cash App</option>
+        </select>
+
+        <label>Channel</label>
+        <select id="channelSelect">
+            <option>Voice</option>
+            <option>Messaging</option>
+            <option>Email</option>
+        </select>
+
+        <label>Category</label>
+        <select id="categorySelect"></select>
+
+        <label>Scenario</label>
+        <select id="scenarioSelect"></select>
+
+        <label>Sub Scenario</label>
+        <select id="subScenarioSelect"></select>
+
+        <button id="loadWorkflowBtn">
+            Load Workflow
+        </button>
+
+        <div class="journey">
+
+            <h4>Workflow Journey</h4>
+
+            <div id="progressTracker">
+
+                <div class="journey-step active">
+                    Verification
+                </div>
+
+                <div class="journey-step">
+                    Investigation
+                </div>
+
+                <div class="journey-step">
+                    Resolution
+                </div>
+
+                <div class="journey-step">
+                    Call Closure
+                </div>
+
             </div>
 
         </div>
 
-        <div class="nav-section">
+    </section>
 
-            <div class="nav-item active">
-                Workflow Guide
-            </div>
+    <!-- Workflow -->
 
-            <div class="nav-item">
-                Knowledge Base
-            </div>
+    <section class="card workflow">
 
-            <div class="nav-item">
-                Reports
+        <div class="workflow-header">
+
+            <h2 id="workflowTitle">
+                Select Workflow
+            </h2>
+
+            <span id="workflowBadge">
+                Ready
+            </span>
+
+        </div>
+
+        <div id="workflowQuestion"
+             class="question-box">
+
+             Select workflow to begin
+
+        </div>
+
+        <div id="workflowChoices"
+             class="choices"></div>
+
+    </section>
+
+    <!-- Resources -->
+
+    <section class="card resources">
+
+        <div class="resource-box">
+
+            <h3>Recommended Actions</h3>
+
+            <div id="recommendedActions">
+
+                Load workflow
+
             </div>
 
         </div>
 
-    </aside>
+        <div class="resource-box">
 
-    <!-- Main Content -->
+            <h3>Knowledge Articles</h3>
 
-    <main class="main-content">
+            <div id="kaReferences">
 
-        <!-- Workflow Intake -->
-
-        <section class="panel intake-panel">
-
-            <h3>Workflow Intake</h3>
-
-            <div class="field-group">
-                <label>LOB</label>
-                <select id="lobSelect">
-                    <option>Cash App</option>
-                </select>
-            </div>
-
-            <div class="field-group">
-                <label>Channel</label>
-                <select id="channelSelect">
-                    <option>Voice</option>
-                    <option>Messaging</option>
-                    <option>Email</option>
-                </select>
-            </div>
-
-            <div class="field-group">
-                <label>Category</label>
-                <select id="categorySelect"></select>
-            </div>
-
-            <div class="field-group">
-                <label>Scenario</label>
-                <select id="scenarioSelect"></select>
-            </div>
-
-            <div class="field-group">
-                <label>Sub Scenario</label>
-                <select id="subScenarioSelect"></select>
-            </div>
-
-            <button id="loadWorkflowBtn" class="primary-btn">
-                Load Workflow
-            </button>
-
-            <div class="progress-card">
-
-                <h4>Workflow Progress</h4>
-
-                <div id="progressTracker">
-
-                    <div class="progress-step active">
-                        Select Workflow
-                    </div>
-
-                </div>
+                Load workflow
 
             </div>
 
-        </section>
+        </div>
 
-        <!-- Guided Workflow -->
+        <div class="resource-box">
 
-        <section class="panel workflow-panel">
+            <h3>QT References</h3>
 
-            <div class="workflow-header">
+            <div id="qtReferences">
 
-                <h2 id="workflowTitle">
-                    Select a Workflow
-                </h2>
-
-                <span id="workflowBadge" class="badge">
-                    Ready
-                </span>
+                Load workflow
 
             </div>
 
-            <div id="workflowQuestion" class="question-card">
+        </div>
 
-                Select a workflow from the left panel.
+    </section>
 
-            </div>
-
-            <div id="workflowChoices" class="choices-container"></div>
-
-        </section>
-
-        <!-- Resource Panel -->
-
-        <section class="panel resources-panel">
-
-            <div class="resource-card">
-
-                <h3>Recommended Actions</h3>
-
-                <div id="recommendedActions">
-                    Load workflow...
-                </div>
-
-            </div>
-
-            <div class="resource-card">
-
-                <h3>Knowledge Articles</h3>
-
-                <div id="kaReferences">
-                    Load workflow...
-                </div>
-
-            </div>
-
-            <div class="resource-card">
-
-                <h3>QT References</h3>
-
-                <div id="qtReferences">
-                    Load workflow...
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
+</main>
+```
 
 </div>
 
@@ -178,23 +197,28 @@
 
 <section class="script-panel">
 
-    <div class="script-header">
+```
+<div class="script-header">
 
-        <h3>Approved Script / Verbiage</h3>
+    <h3>Advocate Script Guidance</h3>
 
-    </div>
+</div>
 
-    <div id="scriptContent">
+<div id="scriptContent">
 
-        Select a workflow to begin.
+    Select workflow to begin.
 
-    </div>
+</div>
+```
 
 </section>
 
 <script src="js/workflow-data.js"></script>
+
 <script src="js/workflow-engine.js"></script>
+
 <script src="js/app.js"></script>
 
 </body>
+
 </html>
