@@ -1,160 +1,184 @@
 document.addEventListener(
-"DOMContentLoaded",
-() => {
+    "DOMContentLoaded",
+    () => {
 
-```
-    initializeWorkflowEngine();
+        initializeWorkflowEngine();
 
-    document
-        .getElementById(
-            "loadWorkflowBtn"
-        )
-        .addEventListener(
-            "click",
-            loadWorkflow
-        );
+        const loadBtn =
+            document.getElementById(
+                "loadWorkflowBtn"
+            );
 
-    document
-        .getElementById(
-            "previousBtn"
-        )
-        .addEventListener(
-            "click",
-            previousStep
-        );
+        if (loadBtn) {
 
-    document
-        .getElementById(
-            "resetWorkflowBtn"
-        )
-        .addEventListener(
-            "click",
-            resetWorkflow
-        );
+            loadBtn.addEventListener(
+                "click",
+                loadWorkflow
+            );
 
-    document
-        .getElementById(
-            "cancelWorkflowBtn"
-        )
-        .addEventListener(
-            "click",
-            openCancelModal
-        );
+        }
 
-    document
-        .getElementById(
-            "closeModalBtn"
-        )
-        .addEventListener(
-            "click",
-            closeCancelModal
-        );
+        const resetBtn =
+            document.getElementById(
+                "resetWorkflowBtn"
+            );
 
-    document
-        .getElementById(
-            "confirmCancelBtn"
-        )
-        .addEventListener(
-            "click",
-            confirmCancellation
-        );
+        if (resetBtn) {
 
-    resetWorkflow();
+            resetBtn.addEventListener(
+                "click",
+                resetWorkflow
+            );
 
-}
-```
+        }
 
+        const previousBtn =
+            document.getElementById(
+                "previousBtn"
+            );
+
+        if (previousBtn) {
+
+            previousBtn.addEventListener(
+                "click",
+                previousStep
+            );
+
+        }
+
+        const cancelBtn =
+            document.getElementById(
+                "cancelWorkflowBtn"
+            );
+
+        if (cancelBtn) {
+
+            cancelBtn.addEventListener(
+                "click",
+                openCancelModal
+            );
+
+        }
+
+        const closeModalBtn =
+            document.getElementById(
+                "closeModalBtn"
+            );
+
+        if (closeModalBtn) {
+
+            closeModalBtn.addEventListener(
+                "click",
+                closeCancelModal
+            );
+
+        }
+
+        const confirmCancelBtn =
+            document.getElementById(
+                "confirmCancelBtn"
+            );
+
+        if (confirmCancelBtn) {
+
+            confirmCancelBtn.addEventListener(
+                "click",
+                confirmCancellation
+            );
+
+        }
+
+        resetWorkflow();
+
+    }
 );
 
 function openCancelModal() {
 
-```
-document
-    .getElementById(
-        "cancelModal"
-    )
-    .classList
-    .remove("hidden");
-```
+    const modal =
+        document.getElementById(
+            "cancelModal"
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
+            "hidden"
+        );
+
+    }
 
 }
 
 function closeCancelModal() {
 
-```
-document
-    .getElementById(
-        "cancelModal"
-    )
-    .classList
-    .add("hidden");
-```
+    const modal =
+        document.getElementById(
+            "cancelModal"
+        );
+
+    if (modal) {
+
+        modal.classList.add(
+            "hidden"
+        );
+
+    }
 
 }
 
 function confirmCancellation() {
 
-```
-const reason =
-    document
-    .getElementById(
-        "cancelReason"
-    )
-    .value;
+    const reasonField =
+        document.getElementById(
+            "cancelReason"
+        );
 
-workflowBadge.textContent =
-    "CANCELLED";
+    const reason =
+        reasonField
+            ? reasonField.value
+            : "Workflow Cancelled";
 
-workflowBadge.className =
-    "status-badge cancelled";
+    workflowBadge.textContent =
+        "CANCELLED";
 
-workflowQuestion.innerHTML = `
-    <h2>
-        Workflow Cancelled
-    </h2>
+    workflowQuestion.innerHTML = `
+        <h2>
+            Workflow Cancelled
+        </h2>
 
-    <br>
+        <br>
 
-    <p>
-        Reason:
-        <strong>${reason}</strong>
-    </p>
-`;
+        <strong>
+            Reason:
+        </strong>
 
-workflowChoices.innerHTML = "";
+        ${reason}
+    `;
 
-recommendedActions.innerHTML = `
-    <ul>
-        <li>Document cancellation</li>
-        <li>Apply disposition</li>
-        <li>Close interaction</li>
-    </ul>
-`;
+    workflowChoices.innerHTML = "";
 
-kaReferences.innerHTML = `
-    <ul>
-        <li>
-            Closure Standards
-        </li>
-    </ul>
-`;
+    recommendedActions.innerHTML = `
+        <ul>
+            <li>Document cancellation reason</li>
+            <li>Apply disposition</li>
+            <li>Close interaction</li>
+        </ul>
+    `;
 
-qtReferences.innerHTML = `
-    <ul>
-        <li>
-            Case Documentation Tool
-        </li>
-    </ul>
-`;
+    kaReferences.innerHTML =
+        "No resources required.";
 
-scriptContent.innerHTML = `
-    The workflow has been cancelled.
+    qtReferences.innerHTML =
+        "No tools required.";
 
-    Document the reason and
-    proceed with case closure.
-`;
+    scriptContent.innerHTML = `
+        This workflow was cancelled.
 
-closeCancelModal();
-```
+        Document the outcome and
+        proceed with closure.
+    `;
+
+    closeCancelModal();
 
 }
