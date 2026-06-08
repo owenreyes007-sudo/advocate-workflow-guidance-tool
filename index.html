@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
@@ -38,41 +37,17 @@
 
     </div>
 
-    <div class="menu">
-
-        <div class="menu-item active">
-            Workflow Guide
-        </div>
-
-        <div class="menu-item">
-            Knowledge Base
-        </div>
-
-        <div class="menu-item">
-            Reports
-        </div>
-
-    </div>
-
-</aside>
-
-<!-- MAIN -->
-
-<main class="content">
-
-    <!-- WORKFLOW INTAKE -->
-
-    <section class="card intake">
+    <div class="intake-section">
 
         <h3>Workflow Intake</h3>
 
-        <label>LOB</label>
+        <label for="lobSelect">LOB</label>
 
         <select id="lobSelect">
             <option>Cash App</option>
         </select>
 
-        <label>Channel</label>
+        <label for="channelSelect">Channel</label>
 
         <select id="channelSelect">
             <option>Voice</option>
@@ -80,53 +55,61 @@
             <option>Email</option>
         </select>
 
-        <label>Category</label>
+        <label for="categorySelect">Category</label>
 
         <select id="categorySelect"></select>
 
-        <label>Scenario</label>
+        <label for="scenarioSelect">Scenario</label>
 
         <select id="scenarioSelect"></select>
 
-        <label>Sub Scenario</label>
+        <label for="subScenarioSelect">Sub Scenario</label>
 
         <select id="subScenarioSelect"></select>
 
-        <button id="loadWorkflowBtn">
+        <button id="loadWorkflowBtn" class="primary-btn">
+
             Load Workflow
+
         </button>
 
-        <div class="journey">
+    </div>
 
-            <h4>Workflow Journey</h4>
+    <div class="journey-card">
 
-            <div id="progressTracker">
+        <h3>Workflow Journey</h3>
 
-                <div class="journey-step active">
-                    Verification
-                </div>
+        <div id="progressTracker">
 
-                <div class="journey-step">
-                    Investigation
-                </div>
+            <div class="journey-step active">
+                Verification
+            </div>
 
-                <div class="journey-step">
-                    Resolution
-                </div>
+            <div class="journey-step">
+                Investigation
+            </div>
 
-                <div class="journey-step">
-                    Call Closure
-                </div>
+            <div class="journey-step">
+                Resolution
+            </div>
 
+            <div class="journey-step">
+                Call Closure
             </div>
 
         </div>
 
-    </section>
+    </div>
 
-    <!-- WORKFLOW CENTER -->
+</aside>
 
-    <section class="card workflow">
+<!-- MAIN CONTENT -->
+
+<main class="content">
+
+    <!-- CENTER PANEL -->
+
+    <section class="workflow-panel">
 
         <div class="workflow-header">
 
@@ -136,9 +119,11 @@
 
             </h2>
 
-            <span id="workflowBadge">
+            <span
+                id="workflowBadge"
+                class="status-badge ready">
 
-                Ready
+                READY
 
             </span>
 
@@ -146,29 +131,25 @@
 
         <div
             id="workflowQuestion"
-            class="question-box">
+            class="question-card">
 
-            Select workflow to begin
+            Select a workflow to begin.
 
         </div>
 
         <div
             id="workflowChoices"
-            class="choices">
+            class="choice-container">
 
         </div>
 
-        <div class="script-box">
+        <div class="script-card">
 
-            <h3>
-
-                Advocate Script Guidance
-
-            </h3>
+            <h3>Advocate Guidance</h3>
 
             <div id="scriptContent">
 
-                Select workflow to begin.
+                Select a workflow to begin.
 
             </div>
 
@@ -177,8 +158,24 @@
         <div class="workflow-footer">
 
             <button
+                id="previousBtn"
+                class="secondary-btn">
+
+                Previous Step
+
+            </button>
+
+            <button
+                id="cancelWorkflowBtn"
+                class="warning-btn">
+
+                Cancel Workflow
+
+            </button>
+
+            <button
                 id="resetWorkflowBtn"
-                class="reset-btn">
+                class="secondary-btn">
 
                 Reset Workflow
 
@@ -188,53 +185,41 @@
 
     </section>
 
-    <!-- RESOURCES -->
+    <!-- RIGHT PANEL -->
 
-    <section class="card resources">
+    <section class="resource-panel">
 
-        <div class="resource-box">
+        <div class="resource-card">
 
-            <h3>
-
-                Recommended Actions
-
-            </h3>
+            <h3>Recommended Actions</h3>
 
             <div id="recommendedActions">
 
-                Load workflow
+                No workflow loaded.
 
             </div>
 
         </div>
 
-        <div class="resource-box">
+        <div class="resource-card">
 
-            <h3>
-
-                Knowledge Articles
-
-            </h3>
+            <h3>Knowledge Resources</h3>
 
             <div id="kaReferences">
 
-                Load workflow
+                No resources loaded.
 
             </div>
 
         </div>
 
-        <div class="resource-box">
+        <div class="resource-card">
 
-            <h3>
-
-                QT References
-
-            </h3>
+            <h3>Tools & Systems</h3>
 
             <div id="qtReferences">
 
-                Load workflow
+                No tools loaded.
 
             </div>
 
@@ -247,6 +232,56 @@
 
 </div>
 
+<!-- CANCEL MODAL -->
+
+<div
+    id="cancelModal"
+    class="modal hidden">
+
+```
+<div class="modal-content">
+
+    <h3>Cancel Workflow</h3>
+
+    <p>Select a cancellation reason:</p>
+
+    <select id="cancelReason">
+
+        <option>Call Disconnected</option>
+        <option>Customer Resolved Issue</option>
+        <option>Wrong Workflow Selected</option>
+        <option>Duplicate Contact</option>
+        <option>Transferred To Another Team</option>
+        <option>Customer Refused Verification</option>
+        <option>Other</option>
+
+    </select>
+
+    <div class="modal-buttons">
+
+        <button
+            id="confirmCancelBtn"
+            class="warning-btn">
+
+            Confirm Cancellation
+
+        </button>
+
+        <button
+            id="closeModalBtn"
+            class="secondary-btn">
+
+            Return To Workflow
+
+        </button>
+
+    </div>
+
+</div>
+```
+
+</div>
+
 <script src="js/workflow-data.js"></script>
 
 <script src="js/workflow-engine.js"></script>
@@ -254,5 +289,4 @@
 <script src="js/app.js"></script>
 
 </body>
-
 </html>
