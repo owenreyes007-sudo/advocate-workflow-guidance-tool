@@ -276,56 +276,37 @@ renderCurrentStep();
 
 function renderActions(step){
 
-recommendedActions.innerHTML =
-
-"<ul>" +
-
-step.actions
-.map(item=>`<li>${item}</li>`)
-.join("")
-
-*
-
-"</ul>";
+    recommendedActions.innerHTML = `
+        <ul>
+            ${step.actions
+                .map(item => `<li>${item}</li>`)
+                .join("")}
+        </ul>
+    `;
 
 }
 
 function renderKAs(step){
 
-kaReferences.innerHTML =
-
-"<ul>" +
-
-step.kas
-.map(item=>`<li>${item}</li>`)
-.join("")
-
-*
-
-"</ul>";
+    kaReferences.innerHTML = `
+        <ul>
+            ${step.kas
+                .map(item => `<li>${item}</li>`)
+                .join("")}
+        </ul>
+    `;
 
 }
 
 function renderQTs(step){
 
-qtReferences.innerHTML =
-
-"<ul>" +
-
-step.qts
-.map(item=>`<li>${item}</li>`)
-.join("")
-
-*
-
-"</ul>";
-
-}
-
-function renderScript(step){
-
-scriptContent.innerHTML =
-step.script;
+    qtReferences.innerHTML = `
+        <ul>
+            ${step.qts
+                .map(item => `<li>${item}</li>`)
+                .join("")}
+        </ul>
+    `;
 
 }
 
@@ -366,58 +347,65 @@ progressTracker.appendChild(div);
 
 function resetWorkflow(){
 
-currentWorkflow = null;
+    currentWorkflow = null;
+    currentStepId = null;
+    historyStack = [];
 
-currentStepId = null;
+    workflowTitle.textContent =
+        "Select Workflow";
 
-historyStack = [];
+    workflowBadge.textContent =
+        "Ready";
 
-workflowTitle.textContent =
-"Select Workflow";
+    workflowQuestion.innerHTML =
+        "Select a workflow from the left panel to begin.";
 
-workflowBadge.textContent =
-"Ready";
+    workflowChoices.innerHTML = "";
 
-workflowQuestion.innerHTML =
-"Select workflow to begin";
+    recommendedActions.innerHTML = `
+        <ul>
+            <li>Select a workflow</li>
+            <li>Load workflow</li>
+            <li>Follow guided troubleshooting</li>
+        </ul>
+    `;
 
-workflowChoices.innerHTML = "";
+    kaReferences.innerHTML = `
+        <ul>
+            <li>No Knowledge Articles Loaded</li>
+        </ul>
+    `;
 
-recommendedActions.innerHTML =
-"Load workflow";
+    qtReferences.innerHTML = `
+        <ul>
+            <li>No QT References Loaded</li>
+        </ul>
+    `;
 
-kaReferences.innerHTML =
-"Load workflow";
+    scriptContent.innerHTML = `
+        Welcome Advocate.<br><br>
+        Select a workflow from Workflow Intake to begin.
+    `;
 
-qtReferences.innerHTML =
-"Load workflow";
+    progressTracker.innerHTML = `
+        <div class="journey-step active">
+            Verification
+        </div>
 
-scriptContent.innerHTML =
-"Select workflow to begin";
+        <div class="journey-step">
+            Investigation
+        </div>
 
-progressTracker.innerHTML =
+        <div class="journey-step">
+            Resolution
+        </div>
 
-`
-
-<div class="journey-step active">
-Verification
-</div>
-
-<div class="journey-step">
-Investigation
-</div>
-
-<div class="journey-step">
-Resolution
-</div>
-
-<div class="journey-step">
-Call Closure
-</div>
-`;
+        <div class="journey-step">
+            Call Closure
+        </div>
+    `;
 
 }
-
 function completeWorkflow(){
 
 workflowBadge.textContent =
