@@ -1,41 +1,28 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-```
-console.log("App initialized");
+        initializeWorkflowEngine();
 
-initializeWorkflowEngine();
-
-const loadBtn =
-    document.getElementById("loadWorkflowBtn");
-
-const resetBtn =
-    document.getElementById("resetWorkflowBtn");
-
-if(loadBtn){
-
-    loadBtn.addEventListener(
-        "click",
-        loadWorkflow
-    );
-
-}
-
-if(resetBtn){
-
-    resetBtn.addEventListener(
-        "click",
-        () => {
-
-            console.log(
-                "Reset button clicked"
+        document
+            .getElementById("loadWorkflowBtn")
+            .addEventListener(
+                "click",
+                loadWorkflow
             );
 
-            resetWorkflow();
+        document
+            .getElementById("resetWorkflowBtn")
+            .addEventListener(
+                "click",
+                () => {
 
-        }
-    );
+                    resetWorkflow();
 
-}
-```
+                }
+            );
 
-});
+        resetWorkflow();
+
+    }
+);
