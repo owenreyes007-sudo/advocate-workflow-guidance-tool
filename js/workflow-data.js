@@ -1,467 +1,452 @@
 const workflowLibrary = {
 
-"Account Access": {
+    "Account Access": {
 
-scenario: "Unable To Access Account",
+        scenario: "Unable To Access Account",
 
-subScenarios: {
+        subScenarios: {
 
-"Account Recovery": {
+            "Account Recovery": {
 
-title: "Account Access → Account Recovery",
+                title: "Account Access → Account Recovery",
 
-steps: [
+                startStep: "verify_name",
 
-{
-title: "Verification",
-question: "Can the customer provide their Full Legal Name?",
-choices: ["Yes","No"],
+                steps: {
 
-actions:[
-"Verify customer identity",
-"Review account profile",
-"Validate legal name"
-],
+                    verify_name: {
 
-kas:[
-"KA-1001 Identity Verification Standards",
-"KA-1002 Voice Authentication Guide"
-],
+                        stage: "Verification",
 
-qts:[
-"QT-1001 Authentication Tool",
-"QT-1002 Customer Lookup"
-],
+                        question: "Can the customer provide their Full Legal Name?",
 
-script: `
+                        choices: [
+                            {
+                                label: "Yes",
+                                next: "secondary_auth"
+                            },
+                            {
+                                label: "No",
+                                next: "unable_verify"
+                            }
+                        ],
+
+                        actions: [
+                            "Validate legal name",
+                            "Review account profile"
+                        ],
+
+                        kas: [
+                            "KA-1001 Identity Verification Standards"
+                        ],
+
+                        qts: [
+                            "QT-1001 Authentication Tool"
+                        ],
+
+                        script: `
 Thank you for contacting Cash App Support.
 
 Before we proceed, I need to verify your identity.
 
 Can you please provide your full legal name?
 `
-},
+                    },
 
-{
-title: "Verification",
-question: "Which secondary authentication is available?",
+                    secondary_auth: {
 
-choices:[
-"ZIP Code",
-"Last 4 Debit Card",
-"Last 4 Cash Card",
-"Recent P2P Payment"
-],
+                        stage: "Verification",
 
-actions:[
-"Complete secondary verification",
-"Confirm ownership of account"
-],
+                        question: "Which secondary verification method is available?",
 
-kas:[
-"KA-1003 Secondary Authentication"
-],
+                        choices: [
+                            {
+                                label: "ZIP Code",
+                                next: "recovery_review"
+                            },
+                            {
+                                label: "Last 4 Debit Card",
+                                next: "recovery_review"
+                            },
+                            {
+                                label: "Last 4 Cash Card",
+                                next: "recovery_review"
+                            },
+                            {
+                                label: "Recent P2P Payment",
+                                next: "recovery_review"
+                            }
+                        ],
 
-qts:[
-"QT-1003 Verification Assistant"
-],
+                        actions: [
+                            "Complete secondary authentication"
+                        ],
 
-script: `
+                        kas: [
+                            "KA-1002 Secondary Authentication"
+                        ],
+
+                        qts: [
+                            "QT-1002 Verification Assistant"
+                        ],
+
+                        script: `
 Thank you.
 
 For security purposes, please provide one additional verification item.
 `
-},
+                    },
 
-{
-title: "Investigation",
-question: "Has customer attempted Account Recovery?",
+                    recovery_review: {
 
-choices:[
-"Yes",
-"No"
-],
+                        stage: "Investigation",
 
-actions:[
-"Review recovery attempts",
-"Validate recovery eligibility"
-],
+                        question: "Has the customer already attempted account recovery?",
 
-kas:[
-"KA-1004 Account Recovery Process"
-],
+                        choices: [
+                            {
+                                label: "Yes",
+                                next: "access_channel"
+                            },
+                            {
+                                label: "No",
+                                next: "access_channel"
+                            }
+                        ],
 
-qts:[
-"QT-1004 Account Recovery Tool"
-],
+                        actions: [
+                            "Review recovery attempts",
+                            "Determine eligibility"
+                        ],
 
-script: `
+                        kas: [
+                            "KA-1003 Account Recovery Process"
+                        ],
+
+                        qts: [
+                            "QT-1003 Recovery Tool"
+                        ],
+
+                        script: `
 Thank you for verifying your account.
 
-Let me review the recovery options available.
+Let me review available recovery options.
 `
-},
+                    },
 
-{
-title: "Investigation",
-question: "Is customer able to access registered email or phone?",
+                    access_channel: {
 
-choices:[
-"Email",
-"Phone",
-"Neither"
-],
+                        stage: "Investigation",
 
-actions:[
-"Review recovery channel",
-"Determine access path"
-],
+                        question: "Which recovery channel is available?",
 
-kas:[
-"KA-1005 Recovery Channel Assessment"
-],
+                        choices: [
+                            {
+                                label: "Email Access",
+                                next: "resolution"
+                            },
+                            {
+                                label: "Phone Access",
+                                next: "resolution"
+                            },
+                            {
+                                label: "Neither",
+                                next: "resolution"
+                            }
+                        ],
 
-qts:[
-"QT-1005 Recovery Eligibility"
-],
+                        actions: [
+                            "Assess recovery channels"
+                        ],
 
-script: `I need to determine which recovery channel is available to you.`
-},
+                        kas: [
+                            "KA-1004 Recovery Channel Assessment"
+                        ],
 
-{
-title: "Resolution",
-question: "What resolution path should be used?",
+                        qts: [
+                            "QT-1004 Eligibility Checker"
+                        ],
 
-choices:[
-"Grant Access",
-"Temporary Access",
-"Balance Transfer",
-"Reopen Account"
-],
+                        script: `
+I need to determine which recovery channel is available.
+`
+                    },
 
-actions:[
-"Determine final resolution",
-"Review account status"
-],
+                    resolution: {
 
-kas:[
-"KA-1006 Resolution Decision Matrix"
-],
+                        stage: "Resolution",
 
-qts:[
-"QT-1006 Resolution Selector"
-],
+                        question: "Select the recommended resolution path.",
 
-script: `Based on my review, I have identified the most appropriate resolution path.`
-},
+                        choices: [
+                            {
+                                label: "Grant Access",
+                                next: "closure"
+                            },
+                            {
+                                label: "Temporary Access",
+                                next: "closure"
+                            },
+                            {
+                                label: "Balance Transfer",
+                                next: "closure"
+                            },
+                            {
+                                label: "Reopen Account",
+                                next: "closure"
+                            }
+                        ],
 
-{
-title: "Call Closure",
-question: "Resolution successfully identified.",
+                        actions: [
+                            "Identify final resolution"
+                        ],
 
-choices:[],
+                        kas: [
+                            "KA-1005 Resolution Decision Matrix"
+                        ],
 
-actions:[
-"Provide next steps",
-"Document interaction",
-"Close workflow"
-],
+                        qts: [
+                            "QT-1005 Resolution Selector"
+                        ],
 
-kas:[
-"KA-1099 Case Closure"
-],
+                        script: `
+Based on my review, I have identified the recommended resolution.
+`
+                    },
 
-qts:[
-"QT-1099 Workflow Completion"
-],
+                    unable_verify: {
 
-script: `
+                        stage: "Resolution",
+
+                        question: "Customer could not be verified.",
+
+                        choices: [
+                            {
+                                label: "Continue",
+                                next: "closure"
+                            }
+                        ],
+
+                        actions: [
+                            "Advise customer verification requirements"
+                        ],
+
+                        kas: [
+                            "KA-1006 Unable To Verify Policy"
+                        ],
+
+                        qts: [
+                            "QT-1006 Verification Failure"
+                        ],
+
+                        script: `
+Unfortunately, I am unable to verify ownership of the account.
+`
+                    },
+
+                    closure: {
+
+                        stage: "Call Closure",
+
+                        question: "Workflow Complete",
+
+                        choices: [],
+
+                        actions: [
+                            "Provide next steps",
+                            "Document interaction",
+                            "Close workflow"
+                        ],
+
+                        kas: [
+                            "KA-1099 Closure Standards"
+                        ],
+
+                        qts: [
+                            "QT-1099 Workflow Completion"
+                        ],
+
+                        script: `
 That completes the actions available for this case today.
 
 Is there anything else I can assist you with?
 `
-}
+                    }
+
+                }
+
+            }
+
+        }
 
-]
+    },
 
-}
+    "Banking": {
 
-}
-
-},
-"Banking": {
-
-scenario:"Missing Direct Deposit",
-
-subScenarios:{
-
-"Deposit Investigation":{
-
-title:"Banking → Missing Direct Deposit",
-
-steps:[
-
-{
-title:"Verification",
-question:"Can customer pass identity verification?",
-choices:[
-"Verified"
-],
-
-actions:[
-"Verify identity"
-],
-
-kas:[
-"KA-2001 Identity Verification"
-],
-
-qts:[
-"QT-2001 Authentication Tool"
-],
-
-script:`Before we review the deposit, I need to verify your identity.`
-},
-
-{
-title:"Investigation",
-question:"Can the deposit be located?",
-
-choices:[
-"Pending",
-"Failed",
-"Not Found"
-],
-
-actions:[
-"Search deposit history",
-"Review transaction records"
-],
-
-kas:[
-"KA-2002 Deposit Investigation"
-],
-
-qts:[
-"QT-2002 Deposit Lookup"
-],
-
-script:`Let me investigate the deposit status.`
-},
-
-{
-title:"Investigation",
-question:"Has it been more than 3 business days?",
-
-choices:[
-"Yes",
-"No"
-],
-
-actions:[
-"Review deposit timeline"
-],
-
-kas:[
-"KA-2003 Deposit Timeline"
-],
-
-qts:[
-"QT-2003 Timeline Calculator"
-],
-
-script:`I need to determine how long the deposit has been outstanding.`
-},
-
-{
-title:"Resolution",
-question:"What resolution should be provided?",
-
-choices:[
-"ETA Education",
-"Deposit Trace",
-"Employer Verification"
-],
-
-actions:[
-"Determine next steps"
-],
-
-kas:[
-"KA-2004 Deposit Resolution"
-],
-
-qts:[
-"QT-2004 Deposit Trace Tool"
-],
-
-script:`Based on my investigation, I have identified the next step.`
-},
-
-{
-title:"Call Closure",
-question:"Investigation complete.",
-
-choices:[],
-
-actions:[
-"Provide next steps",
-"Close interaction"
-],
-
-kas:[
-"KA-2099 Closure"
-],
-
-qts:[
-"QT-2099 Completion"
-],
-
-script:`Your case has been reviewed and guidance has been provided.`
-}
-
-]
-
-}
-
-}
-
-},
-"Payments": {
-
-scenario:"P2P Misdirected Payment",
-
-subScenarios:{
-
-"Payment Reversal":{
-
-title:"Payments → P2P Misdirected Payment",
-
-steps:[
-
-{
-title:"Verification",
-question:"Can customer pass identity verification?",
-
-choices:[
-"Verified"
-],
-
-actions:[
-"Authenticate customer"
-],
-
-kas:[
-"KA-3001 Authentication"
-],
-
-qts:[
-"QT-3001 Customer Lookup"
-],
-
-script:`Before reviewing the payment, I need to verify your identity.`
-},
-
-{
-title:"Investigation",
-question:"Who is contacting support?",
-
-choices:[
-"Sender",
-"Recipient"
-],
-
-actions:[
-"Determine workflow path"
-],
-
-kas:[
-"KA-3002 Sender Recipient Assessment"
-],
-
-qts:[
-"QT-3002 Transaction Review"
-],
-
-script:`I need to understand your relationship to the payment.`
-},
-
-{
-title:"Investigation",
-question:"Was the payment sent to the wrong recipient?",
-
-choices:[
-"Yes",
-"No"
-],
-
-actions:[
-"Review payment destination"
-],
-
-kas:[
-"KA-3003 Wrong Recipient Process"
-],
-
-qts:[
-"QT-3003 Recipient Validation"
-],
-
-script:`Let me review the payment details.`
-},
-
-{
-title:"Resolution",
-question:"Is payment eligible for reversal?",
-
-choices:[
-"Eligible",
-"Not Eligible"
-],
-
-actions:[
-"Determine resolution path"
-],
-
-kas:[
-"KA-3004 Reversal Eligibility"
-],
-
-qts:[
-"QT-3004 Reversal Tool"
-],
-
-script:`Based on my review, I can determine whether a reversal is possible.`
-},
-
-{
-title:"Call Closure",
-question:"Workflow complete.",
-
-choices:[],
-
-actions:[
-"Provide guidance",
-"Close interaction"
-],
-
-kas:[
-"KA-3099 Closure"
-],
-
-qts:[
-"QT-3099 Completion"
-],
-
-script:`That completes the review of this payment concern.`
-}
-
-]
-
-}
-
-}
-
-}
+        scenario: "Missing Direct Deposit",
+
+        subScenarios: {
+
+            "Deposit Investigation": {
+
+                title: "Banking → Missing Direct Deposit",
+
+                startStep: "verify",
+
+                steps: {
+
+                    verify: {
+                        stage: "Verification",
+                        question: "Can customer be verified?",
+                        choices: [
+                            { label: "Verified", next: "deposit_search" }
+                        ],
+                        actions: ["Verify identity"],
+                        kas: ["KA-2001 Deposit Verification"],
+                        qts: ["QT-2001 Authentication"],
+                        script: "Before we review the deposit, I need to verify your identity."
+                    },
+
+                    deposit_search: {
+                        stage: "Investigation",
+                        question: "Can the deposit be located?",
+                        choices: [
+                            { label: "Pending", next: "timeline" },
+                            { label: "Found", next: "timeline" },
+                            { label: "Not Found", next: "timeline" }
+                        ],
+                        actions: ["Search deposit records"],
+                        kas: ["KA-2002 Deposit Investigation"],
+                        qts: ["QT-2002 Deposit Lookup"],
+                        script: "Let me investigate the deposit status."
+                    },
+
+                    timeline: {
+                        stage: "Investigation",
+                        question: "Has it been more than 3 business days?",
+                        choices: [
+                            { label: "Yes", next: "resolution" },
+                            { label: "No", next: "resolution" }
+                        ],
+                        actions: ["Review timeline"],
+                        kas: ["KA-2003 Deposit Timeline"],
+                        qts: ["QT-2003 Timeline Calculator"],
+                        script: "I need to determine the expected deposit timeframe."
+                    },
+
+                    resolution: {
+                        stage: "Resolution",
+                        question: "Choose the appropriate resolution.",
+                        choices: [
+                            { label: "Deposit Trace", next: "closure" },
+                            { label: "ETA Education", next: "closure" },
+                            { label: "Employer Verification", next: "closure" }
+                        ],
+                        actions: ["Determine next steps"],
+                        kas: ["KA-2004 Deposit Resolution"],
+                        qts: ["QT-2004 Deposit Trace Tool"],
+                        script: "Based on my investigation, I have identified the next step."
+                    },
+
+                    closure: {
+                        stage: "Call Closure",
+                        question: "Workflow Complete",
+                        choices: [],
+                        actions: ["Close interaction"],
+                        kas: ["KA-2099 Closure"],
+                        qts: ["QT-2099 Completion"],
+                        script: "Your case has been reviewed and guidance has been provided."
+                    }
+
+                }
+
+            }
+
+        }
+
+    },
+
+    "Payments": {
+
+        scenario: "P2P Misdirected Payment",
+
+        subScenarios: {
+
+            "Payment Reversal": {
+
+                title: "Payments → P2P Misdirected Payment",
+
+                startStep: "verify",
+
+                steps: {
+
+                    verify: {
+                        stage: "Verification",
+                        question: "Can customer be verified?",
+                        choices: [
+                            { label: "Verified", next: "role" }
+                        ],
+                        actions: ["Authenticate customer"],
+                        kas: ["KA-3001 Authentication"],
+                        qts: ["QT-3001 Customer Lookup"],
+                        script: "Before reviewing the payment, I need to verify your identity."
+                    },
+
+                    role: {
+                        stage: "Investigation",
+                        question: "Who is contacting support?",
+                        choices: [
+                            { label: "Sender", next: "recipient" },
+                            { label: "Recipient", next: "recipient" }
+                        ],
+                        actions: ["Determine customer role"],
+                        kas: ["KA-3002 Sender Recipient Review"],
+                        qts: ["QT-3002 Transaction Review"],
+                        script: "I need to determine your relationship to the payment."
+                    },
+
+                    recipient: {
+                        stage: "Investigation",
+                        question: "Was the payment sent to the wrong recipient?",
+                        choices: [
+                            { label: "Yes", next: "eligibility" },
+                            { label: "No", next: "eligibility" }
+                        ],
+                        actions: ["Review recipient details"],
+                        kas: ["KA-3003 Wrong Recipient Process"],
+                        qts: ["QT-3003 Recipient Validation"],
+                        script: "Let me review the payment details."
+                    },
+
+                    eligibility: {
+                        stage: "Resolution",
+                        question: "Is the payment eligible for reversal?",
+                        choices: [
+                            { label: "Eligible", next: "closure" },
+                            { label: "Not Eligible", next: "closure" }
+                        ],
+                        actions: ["Determine final outcome"],
+                        kas: ["KA-3004 Reversal Eligibility"],
+                        qts: ["QT-3004 Reversal Tool"],
+                        script: "Based on my review, I can determine reversal eligibility."
+                    },
+
+                    closure: {
+                        stage: "Call Closure",
+                        question: "Workflow Complete",
+                        choices: [],
+                        actions: ["Provide guidance", "Close interaction"],
+                        kas: ["KA-3099 Closure"],
+                        qts: ["QT-3099 Completion"],
+                        script: "That completes the review of this payment concern."
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
 
 };
