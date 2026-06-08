@@ -1,43 +1,66 @@
 let currentWorkflow = null;
 let currentStepId = null;
 let historyStack = [];
-let workflowSummary = {};
 
 const categorySelect =
-document.getElementById("categorySelect");
+document.getElementById(
+"categorySelect"
+);
 
 const scenarioSelect =
-document.getElementById("scenarioSelect");
+document.getElementById(
+"scenarioSelect"
+);
 
 const subScenarioSelect =
-document.getElementById("subScenarioSelect");
+document.getElementById(
+"subScenarioSelect"
+);
 
 const workflowTitle =
-document.getElementById("workflowTitle");
+document.getElementById(
+"workflowTitle"
+);
 
 const workflowQuestion =
-document.getElementById("workflowQuestion");
+document.getElementById(
+"workflowQuestion"
+);
 
 const workflowChoices =
-document.getElementById("workflowChoices");
+document.getElementById(
+"workflowChoices"
+);
 
 const recommendedActions =
-document.getElementById("recommendedActions");
+document.getElementById(
+"recommendedActions"
+);
 
 const kaReferences =
-document.getElementById("kaReferences");
+document.getElementById(
+"kaReferences"
+);
 
 const qtReferences =
-document.getElementById("qtReferences");
+document.getElementById(
+"qtReferences"
+);
 
 const scriptContent =
-document.getElementById("scriptContent");
+document.getElementById(
+"scriptContent"
+);
 
 const workflowBadge =
-document.getElementById("workflowBadge");
+document.getElementById(
+"workflowBadge"
+);
 
 const progressTracker =
-document.getElementById("progressTracker");
+document.getElementById(
+"progressTracker"
+);
 
 function initializeWorkflowEngine() {
 
@@ -66,12 +89,19 @@ Object.keys(workflowLibrary)
     .forEach(category => {
 
         const option =
-            document.createElement("option");
+            document.createElement(
+                "option"
+            );
 
-        option.value = category;
-        option.textContent = category;
+        option.value =
+            category;
 
-        categorySelect.appendChild(option);
+        option.textContent =
+            category;
+
+        categorySelect.appendChild(
+            option
+        );
 
     });
 
@@ -89,15 +119,23 @@ const category =
 scenarioSelect.innerHTML = "";
 
 const option =
-    document.createElement("option");
+    document.createElement(
+        "option"
+    );
 
 option.value =
-    workflowLibrary[category].scenario;
+    workflowLibrary[
+        category
+    ].scenario;
 
 option.textContent =
-    workflowLibrary[category].scenario;
+    workflowLibrary[
+        category
+    ].scenario;
 
-scenarioSelect.appendChild(option);
+scenarioSelect.appendChild(
+    option
+);
 
 populateSubScenario();
 ```
@@ -113,17 +151,24 @@ const category =
 subScenarioSelect.innerHTML = "";
 
 Object.keys(
-    workflowLibrary[category]
-    .subScenarios
+    workflowLibrary[
+        category
+    ].subScenarios
 ).forEach(sub => {
 
     const option =
-        document.createElement("option");
+        document.createElement(
+            "option"
+        );
 
-    option.value = sub;
-    option.textContent = sub;
+    option.value =
+        sub;
 
-    subScenarioSelect.appendChild(option);
+    option.textContent =
+        sub;
+
+    subScenarioSelect
+        .appendChild(option);
 
 });
 ```
@@ -140,19 +185,16 @@ const subScenario =
     subScenarioSelect.value;
 
 currentWorkflow =
-    workflowLibrary[category]
-    .subScenarios[subScenario];
+    workflowLibrary[
+        category
+    ].subScenarios[
+        subScenario
+    ];
+
+currentStepId =
+    currentWorkflow.startStep;
 
 historyStack = [];
-
-workflowSummary = {
-    workflow:
-        currentWorkflow.title,
-    status:
-        "In Progress"
-};
-
-currentStepId = "ttc";
 
 workflowTitle.textContent =
     currentWorkflow.title;
@@ -171,16 +213,6 @@ renderCurrentStep();
 function getCurrentStep() {
 
 ```
-if (
-    sharedVerification[currentStepId]
-) {
-
-    return sharedVerification[
-        currentStepId
-    ];
-
-}
-
 return currentWorkflow.steps[
     currentStepId
 ];
@@ -190,30 +222,34 @@ return currentWorkflow.steps[
 
 function renderCurrentStep() {
 
-    const step =
-        getCurrentStep();
+```
+const step =
+    getCurrentStep();
 
-    workflowQuestion.innerHTML = `
-        <strong>
-            ${step.title}
-        </strong>
+workflowQuestion.innerHTML = `
+    <strong>
+        ${step.title}
+    </strong>
 
-        <br><br>
+    <br><br>
 
-        ${step.question}
-    `;
+    ${step.question}
+`;
 
-    renderChoices(step);
+renderChoices(step);
 
-    renderActions(step);
+renderActions(step);
 
-    renderResources(step);
+renderResources(step);
 
-    renderTools(step);
+renderTools(step);
 
-    renderScript(step);
+renderScript(step);
 
-    renderProgress(step.stage);
+renderProgress(
+    step.stage
+);
+```
 
 }
 
@@ -223,74 +259,49 @@ function renderChoices(step) {
 workflowChoices.innerHTML = "";
 
 if (
+    !step.choices ||
     step.choices.length === 0
 ) {
-
-    const button =
-        document.createElement(
-            "button"
-        );
-
-    button.className =
-        "primary-btn";
-
-    button.textContent =
-        "Complete Workflow";
-
-    button.onclick =
-        completeWorkflow;
-
-    workflowChoices.appendChild(
-        button
-    );
 
     return;
 
 }
 
-step.choices.forEach(choice => {
+step.choices.forEach(
+    choice => {
 
-    const button =
-        document.createElement(
-            "button"
-        );
-
-    button.className =
-        "choice-btn";
-
-    button.textContent =
-        choice.label;
-
-    button.onclick =
-        () => {
-
-            historyStack.push(
-                currentStepId
+        const button =
+            document.createElement(
+                "button"
             );
 
-            if (
-                choice.next ===
-                "__WORKFLOW_START__"
-            ) {
+        button.className =
+            "choice-btn";
 
-                currentStepId =
-                    currentWorkflow.startStep;
+        button.textContent =
+            choice.label;
 
-            } else {
+        button.onclick =
+            () => {
+
+                historyStack.push(
+                    currentStepId
+                );
 
                 currentStepId =
                     choice.next;
 
-            }
+                renderCurrentStep();
 
-            renderCurrentStep();
+            };
 
-        };
+        workflowChoices
+            .appendChild(
+                button
+            );
 
-    workflowChoices
-        .appendChild(button);
-
-});
+    }
+);
 ```
 
 }
@@ -301,11 +312,11 @@ function renderActions(step) {
 recommendedActions.innerHTML =
     "<ul>" +
     step.actions
-    .map(
-        item =>
-        `<li>${item}</li>`
-    )
-    .join("") +
+        .map(
+            item =>
+                `<li>${item}</li>`
+        )
+        .join("") +
     "</ul>";
 ```
 
@@ -317,16 +328,16 @@ function renderResources(step) {
 kaReferences.innerHTML =
     "<ul>" +
     step.resources
-    .map(
-        item =>
-        `<li>
-            <a href="${item.url}"
-               target="_blank">
-               📚 ${item.name}
-            </a>
-        </li>`
-    )
-    .join("") +
+        .map(
+            item =>
+                `<li>
+                    <a href="${item.url}"
+                       target="_blank">
+                       ${item.name}
+                    </a>
+                </li>`
+        )
+        .join("") +
     "</ul>";
 ```
 
@@ -338,16 +349,16 @@ function renderTools(step) {
 qtReferences.innerHTML =
     "<ul>" +
     step.tools
-    .map(
-        item =>
-        `<li>
-            <a href="${item.url}"
-               target="_blank">
-               🛠 ${item.name}
-            </a>
-        </li>`
-    )
-    .join("") +
+        .map(
+            item =>
+                `<li>
+                    <a href="${item.url}"
+                       target="_blank">
+                       ${item.name}
+                    </a>
+                </li>`
+        )
+        .join("") +
     "</ul>";
 ```
 
@@ -381,7 +392,8 @@ const stages = [
 
 ];
 
-progressTracker.innerHTML = "";
+progressTracker.innerHTML =
+    "";
 
 stages.forEach(stage => {
 
@@ -437,7 +449,9 @@ function resetWorkflow() {
 
 ```
 currentWorkflow = null;
+
 currentStepId = null;
+
 historyStack = [];
 
 workflowTitle.textContent =
@@ -455,9 +469,6 @@ workflowQuestion.innerHTML =
 workflowChoices.innerHTML =
     "";
 
-scriptContent.innerHTML =
-    "Select a workflow to begin.";
-
 recommendedActions.innerHTML =
     "No workflow loaded.";
 
@@ -466,40 +477,9 @@ kaReferences.innerHTML =
 
 qtReferences.innerHTML =
     "No tools loaded.";
-```
 
-}
-
-function completeWorkflow() {
-
-```
-workflowBadge.textContent =
-    "COMPLETED";
-
-workflowBadge.className =
-    "status-badge complete";
-
-workflowQuestion.innerHTML = `
-    <h2>
-        Workflow Summary
-    </h2>
-
-    <p>
-        Workflow Completed Successfully
-    </p>
-`;
-
-workflowChoices.innerHTML =
-    "";
-
-scriptContent.innerHTML = `
-    Thank you for contacting
-    Cash App Support.
-
-    Is there anything else
-    I can assist you with
-    today?
-`;
+scriptContent.innerHTML =
+    "Select a workflow to begin.";
 ```
 
 }
