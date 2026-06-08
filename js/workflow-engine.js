@@ -190,32 +190,30 @@ return currentWorkflow.steps[
 
 function renderCurrentStep() {
 
-```
-const step =
-    getCurrentStep();
+    const step =
+        getCurrentStep();
 
-workflowQuestion.innerHTML = `
-    <strong>
-        ${step.title}
-    </strong>
+    workflowQuestion.innerHTML = `
+        <strong>
+            ${step.title}
+        </strong>
 
-    <br><br>
+        <br><br>
 
-    ${step.question}
-`;
+        ${step.question}
+    `;
 
-renderChoices(step);
+    renderChoices(step);
 
-renderActions(step);
+    renderActions(step);
 
-renderResources(step);
+    renderResources(step);
 
-renderTools(step);
+    renderTools(step);
 
-renderScript(step);
+    renderScript(step);
 
-renderProgress(step.stage);
-```
+    renderProgress(step.stage);
 
 }
 
