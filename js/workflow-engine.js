@@ -347,65 +347,83 @@ progressTracker.appendChild(div);
 
 function resetWorkflow(){
 
-    currentWorkflow = null;
-    currentStepId = null;
-    historyStack = [];
+```
+// Reset engine state
+currentWorkflow = null;
+currentStepId = null;
+historyStack = [];
 
-    workflowTitle.textContent =
-        "Select Workflow";
+// Header
+workflowTitle.textContent =
+    "Select Workflow";
 
-    workflowBadge.textContent =
-        "Ready";
+workflowBadge.textContent =
+    "Ready";
 
-    workflowQuestion.innerHTML =
-        "Select a workflow from the left panel to begin.";
+// Main workflow panel
+workflowQuestion.innerHTML = `
+    Select a workflow from the Workflow Intake panel.
+`;
 
-    workflowChoices.innerHTML = "";
+workflowChoices.innerHTML = `
+    <div style="padding:10px;color:#64748b;">
+        No workflow loaded.
+    </div>
+`;
 
-    recommendedActions.innerHTML = `
-        <ul>
-            <li>Select a workflow</li>
-            <li>Load workflow</li>
-            <li>Follow guided troubleshooting</li>
-        </ul>
-    `;
+// Script panel
+scriptContent.innerHTML = `
+    Welcome Advocate.<br><br>
+    Select a workflow to begin guided troubleshooting.
+`;
 
-    kaReferences.innerHTML = `
-        <ul>
-            <li>No Knowledge Articles Loaded</li>
-        </ul>
-    `;
+// Recommended Actions
+recommendedActions.innerHTML = `
+    <ul>
+        <li>Select a workflow</li>
+        <li>Click Load Workflow</li>
+        <li>Follow guided process</li>
+    </ul>
+`;
 
-    qtReferences.innerHTML = `
-        <ul>
-            <li>No QT References Loaded</li>
-        </ul>
-    `;
+// Knowledge Resources
+kaReferences.innerHTML = `
+    <ul>
+        <li>No resources loaded</li>
+    </ul>
+`;
 
-    scriptContent.innerHTML = `
-        Welcome Advocate.<br><br>
-        Select a workflow from Workflow Intake to begin.
-    `;
+// Tools & Systems
+qtReferences.innerHTML = `
+    <ul>
+        <li>No tools loaded</li>
+    </ul>
+`;
 
-    progressTracker.innerHTML = `
-        <div class="journey-step active">
-            Verification
-        </div>
+// Reset journey
+progressTracker.innerHTML = `
+    <div class="journey-step active">
+        Verification
+    </div>
 
-        <div class="journey-step">
-            Investigation
-        </div>
+    <div class="journey-step">
+        Investigation
+    </div>
 
-        <div class="journey-step">
-            Resolution
-        </div>
+    <div class="journey-step">
+        Resolution
+    </div>
 
-        <div class="journey-step">
-            Call Closure
-        </div>
-    `;
+    <div class="journey-step">
+        Call Closure
+    </div>
+`;
+
+console.log("Workflow Reset Complete");
+```
 
 }
+
 function completeWorkflow(){
 
 workflowBadge.textContent =
