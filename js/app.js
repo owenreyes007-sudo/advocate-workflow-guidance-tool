@@ -1,17 +1,25 @@
 document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+"DOMContentLoaded",
+()=>{
 
-        initializeWorkflowEngine();
+initializeWorkflowEngine();
 
-        document
-            .getElementById(
-                "loadWorkflowBtn"
-            )
-            .addEventListener(
-                "click",
-                loadWorkflow
-            );
-
-    }
+document
+.getElementById(
+"loadWorkflowBtn"
+)
+.addEventListener(
+"click",
+loadWorkflow
 );
+
+document
+.getElementById(
+"resetWorkflowBtn"
+)
+.addEventListener(
+"click",
+resetWorkflow
+);
+
+});
