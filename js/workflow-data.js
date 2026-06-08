@@ -380,7 +380,7 @@ const workflowLibrary = {
               }
             ]
 
-          }
+          },
           unable_to_verify: {
 
             stage: "Call Closure",
