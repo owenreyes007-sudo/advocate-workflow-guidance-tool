@@ -1,452 +1,680 @@
 const workflowLibrary = {
 
-    "Account Access": {
+  "Account Access Recovery": {
+
+    scenario: "Account Access",
+
+    subScenarios: {
+
+      "Cannot Access Account": {
+
+        title: "Account Access Recovery",
+
+        startStep: "verify_identity",
 
-        scenario: "Unable To Access Account",
+        steps: {
 
-        subScenarios: {
+          verify_identity: {
 
-            "Account Recovery": {
+            stage: "Verification",
 
-                title: "Account Access → Account Recovery",
+            title: "Verify Customer Identity",
 
-                startStep: "verify_name",
+            question:
+              "Has the customer successfully completed Tap to Confirm?",
 
-                steps: {
+            script:
+              "I’ll first verify ownership of the account before reviewing account access options.",
 
-                    verify_name: {
+            actions: [
+              "Check Tap to Confirm",
+              "Confirm account ownership",
+              "Review linked aliases"
+            ],
 
-                        stage: "Verification",
+            resources: [
+              {
+                name: "Account Access - Voice",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000NiGTIA0/view"
+              }
+            ],
 
-                        question: "Can the customer provide their Full Legal Name?",
+            tools: [
+              {
+                name: "CF1 Lightning",
+                url: "#"
+              },
+              {
+                name: "Regulator",
+                url: "#"
+              }
+            ],
 
-                        choices: [
-                            {
-                                label: "Yes",
-                                next: "secondary_auth"
-                            },
-                            {
-                                label: "No",
-                                next: "unable_verify"
-                            }
-                        ],
+            choices: [
+              {
+                label: "Tap To Confirm Successful",
+                next: "access_review"
+              },
+              {
+                label: "Tap To Confirm Failed",
+                next: "manual_verification"
+              }
+            ]
 
-                        actions: [
-                            "Validate legal name",
-                            "Review account profile"
-                        ],
+          },
 
-                        kas: [
-                            "KA-1001 Identity Verification Standards"
-                        ],
+          manual_verification: {
 
-                        qts: [
-                            "QT-1001 Authentication Tool"
-                        ],
+            stage: "Verification",
 
-                        script: `
-Thank you for contacting Cash App Support.
+            title: "Manual Verification",
 
-Before we proceed, I need to verify your identity.
+            question:
+              "Was manual PII verification successful?",
 
-Can you please provide your full legal name?
-`
-                    },
+            script:
+              "For security purposes I need to verify your account ownership using the information available on file.",
 
-                    secondary_auth: {
-
-                        stage: "Verification",
+            actions: [
+              "Verify full name",
+              "Verify phone or email",
+              "Verify supporting identifiers"
+            ],
 
-                        question: "Which secondary verification method is available?",
-
-                        choices: [
-                            {
-                                label: "ZIP Code",
-                                next: "recovery_review"
-                            },
-                            {
-                                label: "Last 4 Debit Card",
-                                next: "recovery_review"
-                            },
-                            {
-                                label: "Last 4 Cash Card",
-                                next: "recovery_review"
-                            },
-                            {
-                                label: "Recent P2P Payment",
-                                next: "recovery_review"
-                            }
-                        ],
+            resources: [
+              {
+                name: "Voice - PII",
+                url: "#"
+              }
+            ],
 
-                        actions: [
-                            "Complete secondary authentication"
-                        ],
+            tools: [
+              {
+                name: "CF1 Lightning",
+                url: "#"
+              }
+            ],
 
-                        kas: [
-                            "KA-1002 Secondary Authentication"
-                        ],
-
-                        qts: [
-                            "QT-1002 Verification Assistant"
-                        ],
-
-                        script: `
-Thank you.
-
-For security purposes, please provide one additional verification item.
-`
-                    },
-
-                    recovery_review: {
-
-                        stage: "Investigation",
-
-                        question: "Has the customer already attempted account recovery?",
-
-                        choices: [
-                            {
-                                label: "Yes",
-                                next: "access_channel"
-                            },
-                            {
-                                label: "No",
-                                next: "access_channel"
-                            }
-                        ],
-
-                        actions: [
-                            "Review recovery attempts",
-                            "Determine eligibility"
-                        ],
-
-                        kas: [
-                            "KA-1003 Account Recovery Process"
-                        ],
-
-                        qts: [
-                            "QT-1003 Recovery Tool"
-                        ],
-
-                        script: `
-Thank you for verifying your account.
-
-Let me review available recovery options.
-`
-                    },
-
-                    access_channel: {
-
-                        stage: "Investigation",
-
-                        question: "Which recovery channel is available?",
-
-                        choices: [
-                            {
-                                label: "Email Access",
-                                next: "resolution"
-                            },
-                            {
-                                label: "Phone Access",
-                                next: "resolution"
-                            },
-                            {
-                                label: "Neither",
-                                next: "resolution"
-                            }
-                        ],
-
-                        actions: [
-                            "Assess recovery channels"
-                        ],
-
-                        kas: [
-                            "KA-1004 Recovery Channel Assessment"
-                        ],
-
-                        qts: [
-                            "QT-1004 Eligibility Checker"
-                        ],
-
-                        script: `
-I need to determine which recovery channel is available.
-`
-                    },
-
-                    resolution: {
-
-                        stage: "Resolution",
-
-                        question: "Select the recommended resolution path.",
-
-                        choices: [
-                            {
-                                label: "Grant Access",
-                                next: "closure"
-                            },
-                            {
-                                label: "Temporary Access",
-                                next: "closure"
-                            },
-                            {
-                                label: "Balance Transfer",
-                                next: "closure"
-                            },
-                            {
-                                label: "Reopen Account",
-                                next: "closure"
-                            }
-                        ],
-
-                        actions: [
-                            "Identify final resolution"
-                        ],
-
-                        kas: [
-                            "KA-1005 Resolution Decision Matrix"
-                        ],
-
-                        qts: [
-                            "QT-1005 Resolution Selector"
-                        ],
-
-                        script: `
-Based on my review, I have identified the recommended resolution.
-`
-                    },
-
-                    unable_verify: {
-
-                        stage: "Resolution",
-
-                        question: "Customer could not be verified.",
-
-                        choices: [
-                            {
-                                label: "Continue",
-                                next: "closure"
-                            }
-                        ],
-
-                        actions: [
-                            "Advise customer verification requirements"
-                        ],
-
-                        kas: [
-                            "KA-1006 Unable To Verify Policy"
-                        ],
-
-                        qts: [
-                            "QT-1006 Verification Failure"
-                        ],
-
-                        script: `
-Unfortunately, I am unable to verify ownership of the account.
-`
-                    },
-
-                    closure: {
-
-                        stage: "Call Closure",
-
-                        question: "Workflow Complete",
-
-                        choices: [],
-
-                        actions: [
-                            "Provide next steps",
-                            "Document interaction",
-                            "Close workflow"
-                        ],
-
-                        kas: [
-                            "KA-1099 Closure Standards"
-                        ],
-
-                        qts: [
-                            "QT-1099 Workflow Completion"
-                        ],
-
-                        script: `
-That completes the actions available for this case today.
-
-Is there anything else I can assist you with?
-`
-                    }
-
-                }
-
-            }
+            choices: [
+              {
+                label: "PII Verified",
+                next: "access_review"
+              },
+              {
+                label: "Unable To Verify",
+                next: "unable_to_verify"
+              }
+            ]
+
+          },
+
+          unable_to_verify: {
+
+            stage: "Call Closure",
+
+            title: "Unable To Verify Customer",
+
+            question:
+              "Customer could not be verified.",
+
+            script:
+              "For account security, I'm unable to discuss account specific information until ownership can be verified.",
+
+            actions: [
+              "Provide supported contact methods",
+              "Do not disclose account information",
+              "Document verification failure"
+            ],
+
+            resources: [],
+
+            tools: [],
+
+            choices: []
+
+          },
+
+          access_review: {
+
+            stage: "Investigation",
+
+            title: "Review Account Access",
+
+            question:
+              "What account access issue is the customer experiencing?",
+
+            script:
+              "Let me review the account details and determine the best recovery path.",
+
+            actions: [
+              "Review aliases",
+              "Review account status",
+              "Review sign in history"
+            ],
+
+            resources: [
+              {
+                name: "Account Access - Voice",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000NiGTIA0/view"
+              }
+            ],
+
+            tools: [
+              {
+                name: "Regulator",
+                url: "#"
+              }
+            ],
+
+            choices: [
+              {
+                label: "Recovery Available",
+                next: "provide_recovery"
+              },
+              {
+                label: "Escalation Required",
+                next: "escalate_access"
+              }
+            ]
+
+          },
+
+          provide_recovery: {
+
+            stage: "Resolution",
+
+            title: "Provide Recovery Guidance",
+
+            question:
+              "Guide customer through recovery steps.",
+
+            script:
+              "I'll walk you through the next steps to regain access to your account.",
+
+            actions: [
+              "Provide recovery instructions",
+              "Confirm understanding",
+              "Verify customer can proceed"
+            ],
+
+            resources: [
+              {
+                name: "Account Access - Voice",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000NiGTIA0/view"
+              }
+            ],
+
+            tools: [],
+
+            choices: [
+              {
+                label: "Proceed To Closure",
+                next: "close_case"
+              }
+            ]
+
+          },
+
+          escalate_access: {
+
+            stage: "Resolution",
+
+            title: "Escalate Account Access",
+
+            question:
+              "Recovery requires escalation.",
+
+            script:
+              "I'll submit this case to the appropriate team for additional review.",
+
+            actions: [
+              "Create escalation",
+              "Document findings",
+              "Provide expectations"
+            ],
+
+            resources: [],
+
+            tools: [
+              {
+                name: "Escalation Queue",
+                url: "#"
+              }
+            ],
+
+            choices: [
+              {
+                label: "Proceed To Closure",
+                next: "close_case"
+              }
+            ]
+
+          },
+
+          close_case: {
+
+            stage: "Call Closure",
+
+            title: "Close Interaction",
+
+            question:
+              "Complete the interaction.",
+
+            script:
+              "Thank you for contacting Cash App. Is there anything else I can assist you with today?",
+
+            actions: [
+              "Document interaction",
+              "Apply disposition",
+              "Deliver CSAT closing"
+            ],
+
+            resources: [],
+
+            tools: [],
+
+            choices: []
+
+          }
 
         }
 
-    },
-
-    "Banking": {
-
-        scenario: "Missing Direct Deposit",
-
-        subScenarios: {
-
-            "Deposit Investigation": {
-
-                title: "Banking → Missing Direct Deposit",
-
-                startStep: "verify",
-
-                steps: {
-
-                    verify: {
-                        stage: "Verification",
-                        question: "Can customer be verified?",
-                        choices: [
-                            { label: "Verified", next: "deposit_search" }
-                        ],
-                        actions: ["Verify identity"],
-                        kas: ["KA-2001 Deposit Verification"],
-                        qts: ["QT-2001 Authentication"],
-                        script: "Before we review the deposit, I need to verify your identity."
-                    },
-
-                    deposit_search: {
-                        stage: "Investigation",
-                        question: "Can the deposit be located?",
-                        choices: [
-                            { label: "Pending", next: "timeline" },
-                            { label: "Found", next: "timeline" },
-                            { label: "Not Found", next: "timeline" }
-                        ],
-                        actions: ["Search deposit records"],
-                        kas: ["KA-2002 Deposit Investigation"],
-                        qts: ["QT-2002 Deposit Lookup"],
-                        script: "Let me investigate the deposit status."
-                    },
-
-                    timeline: {
-                        stage: "Investigation",
-                        question: "Has it been more than 3 business days?",
-                        choices: [
-                            { label: "Yes", next: "resolution" },
-                            { label: "No", next: "resolution" }
-                        ],
-                        actions: ["Review timeline"],
-                        kas: ["KA-2003 Deposit Timeline"],
-                        qts: ["QT-2003 Timeline Calculator"],
-                        script: "I need to determine the expected deposit timeframe."
-                    },
-
-                    resolution: {
-                        stage: "Resolution",
-                        question: "Choose the appropriate resolution.",
-                        choices: [
-                            { label: "Deposit Trace", next: "closure" },
-                            { label: "ETA Education", next: "closure" },
-                            { label: "Employer Verification", next: "closure" }
-                        ],
-                        actions: ["Determine next steps"],
-                        kas: ["KA-2004 Deposit Resolution"],
-                        qts: ["QT-2004 Deposit Trace Tool"],
-                        script: "Based on my investigation, I have identified the next step."
-                    },
-
-                    closure: {
-                        stage: "Call Closure",
-                        question: "Workflow Complete",
-                        choices: [],
-                        actions: ["Close interaction"],
-                        kas: ["KA-2099 Closure"],
-                        qts: ["QT-2099 Completion"],
-                        script: "Your case has been reviewed and guidance has been provided."
-                    }
-
-                }
-
-            }
-
-        }
-
-    },
-
-    "Payments": {
-
-        scenario: "P2P Misdirected Payment",
-
-        subScenarios: {
-
-            "Payment Reversal": {
-
-                title: "Payments → P2P Misdirected Payment",
-
-                startStep: "verify",
-
-                steps: {
-
-                    verify: {
-                        stage: "Verification",
-                        question: "Can customer be verified?",
-                        choices: [
-                            { label: "Verified", next: "role" }
-                        ],
-                        actions: ["Authenticate customer"],
-                        kas: ["KA-3001 Authentication"],
-                        qts: ["QT-3001 Customer Lookup"],
-                        script: "Before reviewing the payment, I need to verify your identity."
-                    },
-
-                    role: {
-                        stage: "Investigation",
-                        question: "Who is contacting support?",
-                        choices: [
-                            { label: "Sender", next: "recipient" },
-                            { label: "Recipient", next: "recipient" }
-                        ],
-                        actions: ["Determine customer role"],
-                        kas: ["KA-3002 Sender Recipient Review"],
-                        qts: ["QT-3002 Transaction Review"],
-                        script: "I need to determine your relationship to the payment."
-                    },
-
-                    recipient: {
-                        stage: "Investigation",
-                        question: "Was the payment sent to the wrong recipient?",
-                        choices: [
-                            { label: "Yes", next: "eligibility" },
-                            { label: "No", next: "eligibility" }
-                        ],
-                        actions: ["Review recipient details"],
-                        kas: ["KA-3003 Wrong Recipient Process"],
-                        qts: ["QT-3003 Recipient Validation"],
-                        script: "Let me review the payment details."
-                    },
-
-                    eligibility: {
-                        stage: "Resolution",
-                        question: "Is the payment eligible for reversal?",
-                        choices: [
-                            { label: "Eligible", next: "closure" },
-                            { label: "Not Eligible", next: "closure" }
-                        ],
-                        actions: ["Determine final outcome"],
-                        kas: ["KA-3004 Reversal Eligibility"],
-                        qts: ["QT-3004 Reversal Tool"],
-                        script: "Based on my review, I can determine reversal eligibility."
-                    },
-
-                    closure: {
-                        stage: "Call Closure",
-                        question: "Workflow Complete",
-                        choices: [],
-                        actions: ["Provide guidance", "Close interaction"],
-                        kas: ["KA-3099 Closure"],
-                        qts: ["QT-3099 Completion"],
-                        script: "That completes the review of this payment concern."
-                    }
-
-                }
-
-            }
-
-        }
+      }
 
     }
+
+  },
+
+  "Missing Direct Deposit": {
+
+    scenario: "Banking",
+
+    subScenarios: {
+
+      "Missing Direct Deposit": {
+
+        title: "Missing Direct Deposit",
+
+        startStep: "verify_identity",
+
+        steps: {
+
+          verify_identity: {
+
+            stage: "Verification",
+
+            title: "Verify Customer",
+
+            question:
+              "Has the customer successfully completed Tap to Confirm?",
+
+            script:
+              "Before reviewing the deposit, I'll verify account ownership.",
+
+            actions: [
+              "Review Tap To Confirm",
+              "Verify ownership"
+            ],
+
+            resources: [
+              {
+                name: "Direct Deposit",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000WxzRIAS/view"
+              }
+            ],
+
+            tools: [
+              {
+                name: "CF1 Lightning",
+                url: "#"
+              }
+            ],
+
+            choices: [
+              {
+                label: "Tap To Confirm Successful",
+                next: "deposit_investigation"
+              },
+              {
+                label: "Tap To Confirm Failed",
+                next: "manual_verification"
+              }
+            ]
+
+          },
+
+          manual_verification: {
+
+            stage: "Verification",
+
+            title: "Manual Verification",
+
+            question:
+              "Was manual verification successful?",
+
+            script:
+              "I'll verify ownership using available account information.",
+
+            actions: [
+              "Verify name",
+              "Verify phone/email"
+            ],
+
+            resources: [
+              {
+                name: "Voice - PII",
+                url: "#"
+              }
+            ],
+
+            tools: [],
+
+            choices: [
+              {
+                label: "PII Verified",
+                next: "deposit_investigation"
+              },
+              {
+                label: "Unable To Verify",
+                next: "unable_to_verify"
+              }
+            ]
+
+          }
+          unable_to_verify: {
+
+            stage: "Call Closure",
+
+            title: "Unable To Verify Customer",
+
+            question:
+              "Customer could not be verified.",
+
+            script:
+              "For security reasons, I'm unable to discuss account-specific information until ownership has been verified.",
+
+            actions: [
+              "Do not disclose account information",
+              "Provide supported contact methods",
+              "Document verification failure"
+            ],
+
+            resources: [],
+
+            tools: [],
+
+            choices: []
+
+          },
+
+          deposit_investigation: {
+
+            stage: "Investigation",
+
+            title: "Locate Deposit",
+
+            question:
+              "Can the expected deposit be located?",
+
+            script:
+              "Let me review the account and determine the current status of the deposit.",
+
+            actions: [
+              "Review transaction history",
+              "Check pending deposits",
+              "Confirm expected amount"
+            ],
+
+            resources: [
+              {
+                name: "Direct Deposit",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000WxzRIAS/view"
+              }
+            ],
+
+            tools: [
+              {
+                name: "CF1 Lightning",
+                url: "#"
+              },
+              {
+                name: "Regulator",
+                url: "#"
+              }
+            ],
+
+            choices: [
+              {
+                label: "Deposit Found",
+                next: "deposit_status"
+              },
+              {
+                label: "Deposit Not Found",
+                next: "deposit_trace"
+              }
+            ]
+
+          },
+
+          deposit_status: {
+
+            stage: "Assessment",
+
+            title: "Assess Deposit Status",
+
+            question:
+              "What is the current deposit status?",
+
+            script:
+              "I'll review the transaction status and determine the appropriate next steps.",
+
+            actions: [
+              "Review posting status",
+              "Check settlement details",
+              "Confirm availability"
+            ],
+
+            resources: [
+              {
+                name: "Direct Deposit",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000WxzRIAS/view"
+              }
+            ],
+
+            tools: [],
+
+            choices: [
+              {
+                label: "Pending",
+                next: "provide_eta"
+              },
+              {
+                label: "Completed",
+                next: "balance_review"
+              },
+              {
+                label: "Failed",
+                next: "deposit_trace"
+              }
+            ]
+
+          },
+
+          balance_review: {
+
+            stage: "Assessment",
+
+            title: "Balance Review",
+
+            question:
+              "Was the deposit already spent or transferred?",
+
+            script:
+              "Let's review the account activity after the deposit posted.",
+
+            actions: [
+              "Review balance history",
+              "Review transfers",
+              "Review card activity"
+            ],
+
+            resources: [],
+
+            tools: [
+              {
+                name: "Regulator",
+                url: "#"
+              }
+            ],
+
+            choices: [
+              {
+                label: "Deposit Used",
+                next: "educate_customer"
+              },
+              {
+                label: "Still Missing",
+                next: "deposit_trace"
+              }
+            ]
+
+          },
+
+          provide_eta: {
+
+            stage: "Resolution",
+
+            title: "Provide ETA",
+
+            question:
+              "Deposit is still processing.",
+
+            script:
+              "The deposit is currently processing. I'll provide the expected completion timeframe.",
+
+            actions: [
+              "Provide ETA",
+              "Review processing expectations",
+              "Document guidance"
+            ],
+
+            resources: [],
+
+            tools: [],
+
+            choices: [
+              {
+                label: "Proceed To Closure",
+                next: "close_case"
+              }
+            ]
+
+          },
+
+          deposit_trace: {
+
+            stage: "Resolution",
+
+            title: "Trace Deposit",
+
+            question:
+              "Additional investigation required.",
+
+            script:
+              "I'll document the details and initiate the next level of investigation.",
+
+            actions: [
+              "Create escalation",
+              "Document deposit details",
+              "Provide expectations"
+            ],
+
+            resources: [
+              {
+                name: "Direct Deposit",
+                url: "https://cf1.lightning.force.com/lightning/r/Knowledge__kav/ka0Pn000000WxzRIAS/view"
+              }
+            ],
+
+            tools: [
+              {
+                name: "Escalation Queue",
+                url: "#"
+              }
+            ],
+
+            choices: [
+              {
+                label: "Proceed To Closure",
+                next: "close_case"
+              }
+            ]
+
+          },
+
+          educate_customer: {
+
+            stage: "Resolution",
+
+            title: "Deposit Located",
+
+            question:
+              "Deposit was successfully located.",
+
+            script:
+              "The deposit was received and account activity indicates it has already been used.",
+
+            actions: [
+              "Review activity",
+              "Educate customer",
+              "Document findings"
+            ],
+
+            resources: [],
+
+            tools: [],
+
+            choices: [
+              {
+                label: "Proceed To Closure",
+                next: "close_case"
+              }
+            ]
+
+          },
+
+          close_case: {
+
+            stage: "Call Closure",
+
+            title: "Close Interaction",
+
+            question:
+              "Complete the interaction.",
+
+            script:
+              "Thank you for contacting Cash App. Is there anything else I can assist you with today?",
+
+            actions: [
+              "Document interaction",
+              "Apply disposition",
+              "Deliver CSAT closing"
+            ],
+
+            resources: [],
+
+            tools: [],
+
+            choices: []
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
 
 };
