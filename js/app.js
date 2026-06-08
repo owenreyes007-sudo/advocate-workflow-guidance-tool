@@ -1,28 +1,32 @@
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-        initializeWorkflowEngine();
+```
+initializeWorkflowEngine();
 
-        document
-            .getElementById("loadWorkflowBtn")
-            .addEventListener(
-                "click",
-                loadWorkflow
+document
+    .getElementById("loadWorkflowBtn")
+    .addEventListener(
+        "click",
+        loadWorkflow
+    );
+
+document
+    .getElementById("resetWorkflowBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            console.log(
+                "Reset button pressed"
             );
 
-        document
-            .getElementById("resetWorkflowBtn")
-            .addEventListener(
-                "click",
-                () => {
+            resetWorkflow();
 
-                    resetWorkflow();
+        }
+    );
 
-                }
-            );
+// Initialize clean state
+resetWorkflow();
+```
 
-        resetWorkflow();
-
-    }
-);
+});
