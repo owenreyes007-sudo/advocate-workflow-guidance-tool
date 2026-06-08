@@ -1,6 +1,7 @@
 let currentWorkflow = null;
 let currentStepId = null;
 let historyStack = [];
+let workflowSummary = {};
 
 const categorySelect =
 document.getElementById("categorySelect");
@@ -32,497 +33,475 @@ document.getElementById("qtReferences");
 const scriptContent =
 document.getElementById("scriptContent");
 
-const progressTracker =
-document.getElementById("progressTracker");
-
 const workflowBadge =
 document.getElementById("workflowBadge");
 
-function initializeWorkflowEngine(){
+const progressTracker =
+document.getElementById("progressTracker");
 
+function initializeWorkflowEngine() {
+
+```
 loadCategories();
 
 categorySelect.addEventListener(
-"change",
-populateScenario
+    "change",
+    populateScenario
 );
 
 scenarioSelect.addEventListener(
-"change",
-populateSubScenario
+    "change",
+    populateSubScenario
 );
+```
 
 }
 
-function loadCategories(){
+function loadCategories() {
 
+```
 categorySelect.innerHTML = "";
 
 Object.keys(workflowLibrary)
-.forEach(category=>{
+    .forEach(category => {
 
-const option =
-document.createElement("option");
+        const option =
+            document.createElement("option");
 
-option.value = category;
-option.textContent = category;
+        option.value = category;
+        option.textContent = category;
 
-categorySelect.appendChild(option);
+        categorySelect.appendChild(option);
 
-});
+    });
 
 populateScenario();
+```
 
 }
 
-function populateScenario(){
+function populateScenario() {
 
+```
 const category =
-categorySelect.value;
+    categorySelect.value;
 
 scenarioSelect.innerHTML = "";
 
 const option =
-document.createElement("option");
+    document.createElement("option");
 
 option.value =
-workflowLibrary[category].scenario;
+    workflowLibrary[category].scenario;
 
 option.textContent =
-workflowLibrary[category].scenario;
+    workflowLibrary[category].scenario;
 
 scenarioSelect.appendChild(option);
 
 populateSubScenario();
+```
 
 }
 
-function populateSubScenario(){
+function populateSubScenario() {
 
+```
 const category =
-categorySelect.value;
+    categorySelect.value;
 
 subScenarioSelect.innerHTML = "";
 
 Object.keys(
-workflowLibrary[category]
-.subScenarios
-)
-.forEach(sub=>{
+    workflowLibrary[category]
+    .subScenarios
+).forEach(sub => {
 
-const option =
-document.createElement("option");
+    const option =
+        document.createElement("option");
 
-option.value = sub;
-option.textContent = sub;
+    option.value = sub;
+    option.textContent = sub;
 
-subScenarioSelect.appendChild(option);
+    subScenarioSelect.appendChild(option);
 
 });
+```
 
 }
 
-function loadWorkflow(){
+function loadWorkflow() {
 
+```
 const category =
-categorySelect.value;
+    categorySelect.value;
 
 const subScenario =
-subScenarioSelect.value;
+    subScenarioSelect.value;
 
 currentWorkflow =
-workflowLibrary[category]
-.subScenarios[subScenario];
+    workflowLibrary[category]
+    .subScenarios[subScenario];
 
 historyStack = [];
 
-currentStepId =
-currentWorkflow.startStep;
+workflowSummary = {
+    workflow:
+        currentWorkflow.title,
+    status:
+        "In Progress"
+};
+
+currentStepId = "ttc";
 
 workflowTitle.textContent =
-currentWorkflow.title;
+    currentWorkflow.title;
 
 workflowBadge.textContent =
-"In Progress";
+    "IN PROGRESS";
+
+workflowBadge.className =
+    "status-badge progress";
 
 renderCurrentStep();
+```
 
 }
 
-function renderCurrentStep(){
+function getCurrentStep() {
 
+```
+if (
+    sharedVerification[currentStepId]
+) {
+
+    return sharedVerification[
+        currentStepId
+    ];
+
+}
+
+return currentWorkflow.steps[
+    currentStepId
+];
+```
+
+}
+
+function renderCurrentStep() {
+
+```
 const step =
-currentWorkflow.steps[currentStepId];
+    getCurrentStep();
 
-workflowQuestion.innerHTML =
+workflowQuestion.innerHTML = `
+    <strong>
+        ${step.title}
+    </strong>
 
-` <strong>
-${step.stage} </strong>
+    <br><br>
 
-<br><br>
-
-${step.question}
+    ${step.question}
 `;
 
 renderChoices(step);
 
 renderActions(step);
 
-renderKAs(step);
+renderResources(step);
 
-renderQTs(step);
+renderTools(step);
 
 renderScript(step);
 
 renderProgress(step.stage);
+```
 
 }
 
-function renderChoices(step){
+function renderChoices(step) {
 
+```
 workflowChoices.innerHTML = "";
 
-if(step.choices.length === 0){
+if (
+    step.choices.length === 0
+) {
 
-const completeBtn =
-document.createElement("button");
+    const button =
+        document.createElement(
+            "button"
+        );
 
-completeBtn.className =
-"choice-btn";
+    button.className =
+        "primary-btn";
 
-completeBtn.innerText =
-"Complete Workflow";
+    button.textContent =
+        "Complete Workflow";
 
-completeBtn.onclick =
-completeWorkflow;
+    button.onclick =
+        completeWorkflow;
 
-workflowChoices.appendChild(
-completeBtn
-);
+    workflowChoices.appendChild(
+        button
+    );
 
-return;
+    return;
 
 }
 
-step.choices.forEach(choice=>{
+step.choices.forEach(choice => {
 
-const button =
-document.createElement("button");
+    const button =
+        document.createElement(
+            "button"
+        );
 
-button.className =
-"choice-btn";
+    button.className =
+        "choice-btn";
 
-button.innerText =
-choice.label;
+    button.textContent =
+        choice.label;
 
-button.onclick = ()=>{
+    button.onclick =
+        () => {
 
-historyStack.push(
-currentStepId
-);
+            historyStack.push(
+                currentStepId
+            );
 
-currentStepId =
-choice.next;
+            if (
+                choice.next ===
+                "__WORKFLOW_START__"
+            ) {
 
-renderCurrentStep();
+                currentStepId =
+                    currentWorkflow.startStep;
 
-};
+            } else {
 
-workflowChoices.appendChild(
-button
-);
+                currentStepId =
+                    choice.next;
+
+            }
+
+            renderCurrentStep();
+
+        };
+
+    workflowChoices
+        .appendChild(button);
 
 });
-
-if(historyStack.length > 0){
-
-const previousBtn =
-document.createElement("button");
-
-previousBtn.className =
-"choice-btn";
-
-previousBtn.style.background =
-"#CBD5E1";
-
-previousBtn.innerText =
-"Previous Step";
-
-previousBtn.onclick =
-previousStep;
-
-workflowChoices.appendChild(
-previousBtn
-);
+```
 
 }
 
-}
+function renderActions(step) {
 
-function previousStep(){
-
-if(historyStack.length === 0){
-
-return;
-
-}
-
-currentStepId =
-historyStack.pop();
-
-renderCurrentStep();
-
-}
-
-function renderActions(step){
-
-    recommendedActions.innerHTML = `
-        <ul>
-            ${step.actions
-                .map(item => `<li>${item}</li>`)
-                .join("")}
-        </ul>
-    `;
+```
+recommendedActions.innerHTML =
+    "<ul>" +
+    step.actions
+    .map(
+        item =>
+        `<li>${item}</li>`
+    )
+    .join("") +
+    "</ul>";
+```
 
 }
 
-function renderKAs(step){
+function renderResources(step) {
 
-    kaReferences.innerHTML = `
-        <ul>
-            ${step.kas
-                .map(item => `<li>${item}</li>`)
-                .join("")}
-        </ul>
-    `;
-
-}
-
-function renderQTs(step){
-
-    qtReferences.innerHTML = `
-        <ul>
-            ${step.qts
-                .map(item => `<li>${item}</li>`)
-                .join("")}
-        </ul>
-    `;
+```
+kaReferences.innerHTML =
+    "<ul>" +
+    step.resources
+    .map(
+        item =>
+        `<li>
+            <a href="${item.url}"
+               target="_blank">
+               📚 ${item.name}
+            </a>
+        </li>`
+    )
+    .join("") +
+    "</ul>";
+```
 
 }
 
-function renderProgress(currentStage){
+function renderTools(step) {
 
+```
+qtReferences.innerHTML =
+    "<ul>" +
+    step.tools
+    .map(
+        item =>
+        `<li>
+            <a href="${item.url}"
+               target="_blank">
+               🛠 ${item.name}
+            </a>
+        </li>`
+    )
+    .join("") +
+    "</ul>";
+```
+
+}
+
+function renderScript(step) {
+
+```
+scriptContent.innerHTML =
+    step.script;
+```
+
+}
+
+function renderProgress(
+currentStage
+) {
+
+```
 const stages = [
 
-"Verification",
-"Investigation",
-"Resolution",
-"Call Closure"
+    "Verification",
+
+    "Investigation",
+
+    "Assessment",
+
+    "Resolution",
+
+    "Call Closure"
 
 ];
 
 progressTracker.innerHTML = "";
 
-stages.forEach(stage=>{
+stages.forEach(stage => {
 
-const div =
-document.createElement("div");
+    const div =
+        document.createElement(
+            "div"
+        );
 
-div.className =
-"journey-step";
+    div.className =
+        "journey-step";
 
-if(stage === currentStage){
+    if (
+        stage === currentStage
+    ) {
 
-div.classList.add("active");
+        div.classList.add(
+            "active"
+        );
 
-}
+    }
 
-div.innerText = stage;
+    div.textContent =
+        stage;
 
-progressTracker.appendChild(div);
+    progressTracker
+        .appendChild(div);
 
 });
+```
 
 }
 
-function resetWorkflow(){
+function previousStep() {
 
 ```
-// Reset engine state
+if (
+    historyStack.length === 0
+) {
+
+    return;
+
+}
+
+currentStepId =
+    historyStack.pop();
+
+renderCurrentStep();
+```
+
+}
+
+function resetWorkflow() {
+
+```
 currentWorkflow = null;
 currentStepId = null;
 historyStack = [];
 
-// Header
 workflowTitle.textContent =
     "Select Workflow";
 
 workflowBadge.textContent =
-    "Ready";
+    "READY";
 
-// Main workflow panel
-workflowQuestion.innerHTML = `
-    Select a workflow from the Workflow Intake panel.
-`;
+workflowBadge.className =
+    "status-badge ready";
 
-workflowChoices.innerHTML = `
-    <div style="padding:10px;color:#64748b;">
-        No workflow loaded.
-    </div>
-`;
+workflowQuestion.innerHTML =
+    "Select a workflow to begin.";
 
-// Script panel
-scriptContent.innerHTML = `
-    Welcome Advocate.<br><br>
-    Select a workflow to begin guided troubleshooting.
-`;
+workflowChoices.innerHTML =
+    "";
 
-// Recommended Actions
-recommendedActions.innerHTML = `
-    <ul>
-        <li>Select a workflow</li>
-        <li>Click Load Workflow</li>
-        <li>Follow guided process</li>
-    </ul>
-`;
+scriptContent.innerHTML =
+    "Select a workflow to begin.";
 
-// Knowledge Resources
-kaReferences.innerHTML = `
-    <ul>
-        <li>No resources loaded</li>
-    </ul>
-`;
+recommendedActions.innerHTML =
+    "No workflow loaded.";
 
-// Tools & Systems
-qtReferences.innerHTML = `
-    <ul>
-        <li>No tools loaded</li>
-    </ul>
-`;
+kaReferences.innerHTML =
+    "No resources loaded.";
 
-// Reset journey
-progressTracker.innerHTML = `
-    <div class="journey-step active">
-        Verification
-    </div>
-
-    <div class="journey-step">
-        Investigation
-    </div>
-
-    <div class="journey-step">
-        Resolution
-    </div>
-
-    <div class="journey-step">
-        Call Closure
-    </div>
-`;
-
-console.log("Workflow Reset Complete");
+qtReferences.innerHTML =
+    "No tools loaded.";
 ```
 
 }
 
-function completeWorkflow(){
+function completeWorkflow() {
 
+```
 workflowBadge.textContent =
-"Completed";
+    "COMPLETED";
 
-workflowQuestion.innerHTML =
+workflowBadge.className =
+    "status-badge complete";
 
-`
+workflowQuestion.innerHTML = `
+    <h2>
+        Workflow Summary
+    </h2>
 
-<div style="text-align:center">
-
-<h2>
-
-Resolution Summary
-
-</h2>
-
-<br>
-
-<p>
-
-Workflow completed successfully.
-
-</p>
-
-<br>
-
-<ul
-style="
-text-align:left;
-display:inline-block;
-line-height:2;
-"
->
-
-<li>✓ Identity Verified</li>
-
-<li>✓ Investigation Completed</li>
-
-<li>✓ Resolution Determined</li>
-
-<li>✓ Ready For Call Closure</li>
-
-</ul>
-
-</div>
+    <p>
+        Workflow Completed Successfully
+    </p>
 `;
 
-workflowChoices.innerHTML = "";
+workflowChoices.innerHTML =
+    "";
 
-recommendedActions.innerHTML =
+scriptContent.innerHTML = `
+    Thank you for contacting
+    Cash App Support.
 
-`
-
-<ul>
-
-<li>Document interaction</li>
-
-<li>Apply SOP</li>
-
-<li>Provide guidance</li>
-
-<li>Close interaction</li>
-
-</ul>
+    Is there anything else
+    I can assist you with
+    today?
 `;
-
-kaReferences.innerHTML =
-
-`
-
-<ul>
-
-<li>KA-9999 Closure Standards</li>
-
-<li>KA-9998 Documentation Guide</li>
-
-</ul>
-`;
-
-qtReferences.innerHTML =
-
-`
-
-<ul>
-
-<li>QT-9999 Documentation Tool</li>
-
-<li>QT-9998 Closure Assistant</li>
-
-</ul>
-`;
-
-scriptContent.innerHTML =
-
-`
-That completes the actions available for this case.
-
-Is there anything else I can assist you with today?
-`;
+```
 
 }
